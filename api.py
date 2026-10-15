@@ -59,6 +59,7 @@ model_names = {
     "QwenImage21": "qwen-image21",
     "ErnieImage": "ernie-image",
     "Flux2": "flux2",
+    "Flux3": "flux3",
     "Anima": "anima",
     "Krea2": "krea2",
 }
@@ -128,6 +129,8 @@ def inspect_safetensors(filename: str, model_type: str, is_checkpoint: bool):
                     if raw_name == "Flux2":
                         hidden_size = unet_config.get("hidden_size", 0)
                         model_type = {3072: "klein-4b", 4096: "klein-9b"}.get(hidden_size, "dev")
+                    if raw_name == "Flux3":
+                        model_type = "klein-distilled" if unet_config.get("flow_map") else "klein"
 
             if not raw_name:
                 return {"base_model": "unknown"}
