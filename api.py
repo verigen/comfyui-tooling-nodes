@@ -62,6 +62,7 @@ model_names = {
     "Flux3": "flux3",
     "Anima": "anima",
     "Krea2": "krea2",
+    "MOSSImage": "moss-image",
 }
 
 gguf_architectures = {
