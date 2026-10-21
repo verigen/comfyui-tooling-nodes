@@ -63,6 +63,7 @@ model_names = {
     "Anima": "anima",
     "Krea2": "krea2",
     "MOSSImage": "moss-image",
+    "Fibo2": "fibo2",
 }
 
 gguf_architectures = {
