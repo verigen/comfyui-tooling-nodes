@@ -64,6 +64,7 @@ model_names = {
     "Krea2": "krea2",
     "MOSSImage": "moss-image",
     "Fibo2": "fibo2",
+    "MiniMaxH3Image": "minimax-h3-image",
 }
 
 gguf_architectures = {
@@ -135,6 +136,8 @@ def inspect_safetensors(filename: str, model_type: str, is_checkpoint: bool):
                         model_type = "klein-distilled" if unet_config.get("flow_map") else "klein"
 
             if not raw_name:
+                raw_name = detect_minimax_h3_image(cfg, prefix)
+            if not raw_name:
                 return {"base_model": "unknown"}
 
             base_model_name = model_names.get(raw_name, "unknown")
@@ -160,6 +163,14 @@ def inspect_safetensors(filename: str, model_type: str, is_checkpoint: bool):
         print("[comfyui-tooling-nodes] Error inspecting file", filename)
         traceback.print_exc()
         return {"base_model": "unknown", "error": f"Failed to detect base model: {e}"}
+
+
+def detect_minimax_h3_image(cfg: dict, prefix: str) -> str | None:
+    # Fallback for quantized variants (int8, w4a8, ...) that ComfyUI's detection may not resolve
+    keys = ("video_patch_proj.weight", "condition_proj.weight")
+    if all(f"{prefix}{k}" in cfg for k in keys) and f"{prefix}audio_patch_proj.weight" not in cfg:
+        return "MiniMaxH3Image"
+    return None
 
 
 def detect_svdq(cfg: dict) -> str | None:
